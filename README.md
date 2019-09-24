@@ -1,6 +1,6 @@
 Hi,
 
-This plugin is developed by Kaaryaa Labs and helps you get IMEI, UUID and MAC of android device. But you must get android permissions before using it.
+This plugin is developed by Kaaryaa Labs and helps you get IMEI, UUID and MAC of android device. But you must get android permissions for PHONE_STATE if you want IMEI.
 
 You can use this plugin by 
 

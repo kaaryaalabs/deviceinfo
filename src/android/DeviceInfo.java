@@ -52,14 +52,14 @@ public class DeviceInfo extends CordovaPlugin {
         Context context = cordova.getActivity().getApplicationContext();
 		final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		String imsi = mTelephony.getSubscriberId();
-		return imsi;
+        callbackContext.success(imsi);
 	}
 
 	public String getIccid(JSONArray args, CallbackContext callbackContext)  {
         Context context = cordova.getActivity().getApplicationContext();
 		final TelephonyManager mTelephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		String iccid = mTelephony.getSimSerialNumber();
-		return iccid;
+        callbackContext.success(iccid);
 	}
 
 	public String getMac(JSONArray args, CallbackContext callbackContext)  {
@@ -67,6 +67,6 @@ public class DeviceInfo extends CordovaPlugin {
 		final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		final WifiInfo wInfo = wifiManager.getConnectionInfo();
 		String mac = wInfo.getMacAddress();
-		return mac;
+        callbackContext.success(mac);
 	}
 }

@@ -45,7 +45,7 @@ public class DeviceInfo extends CordovaPlugin {
         callbackContext.success(imei);
     }
 
-	public String getMac(JSONArray args, CallbackContext callbackContext)  {
+	public void getMac(JSONArray args, CallbackContext callbackContext)  {
         Context context = cordova.getActivity().getApplicationContext();
 		final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		final WifiInfo wInfo = wifiManager.getConnectionInfo();

@@ -26,18 +26,18 @@ public class DeviceInfo extends CordovaPlugin {
             this.getImei(args, callbackContext);
             return true;
         }
-        if (action.equals("getImsi")) {
-            this.getImsi(args, callbackContext);
-            return true;
-        }
-        if (action.equals("getIccid")) {
-            this.getIccid(args, callbackContext);
-            return true;
-        }
-        if (action.equals("getMac")) {
-            this.getMac(args, callbackContext);
-            return true;
-        }
+        // if (action.equals("getImsi")) {
+        //     this.getImsi(args, callbackContext);
+        //     return true;
+        // }
+        // if (action.equals("getIccid")) {
+        //     this.getIccid(args, callbackContext);
+        //     return true;
+        // }
+        // if (action.equals("getMac")) {
+        //     this.getMac(args, callbackContext);
+        //     return true;
+        // }
         return false;
     }
 
@@ -49,25 +49,25 @@ public class DeviceInfo extends CordovaPlugin {
         callbackContext.success(imei);
     }
 
-	public String getImsi(JSONArray args, CallbackContext callbackContext)  {
-        Context context = cordova.getActivity().getApplicationContext();
-		final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		String imsi = mTelephony.getSubscriberId();
-        callbackContext.success(imsi);
-	}
+    // public String getImsi(JSONArray args, CallbackContext callbackContext)  {
+    //     Context context = cordova.getActivity().getApplicationContext();
+	// 	final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+	// 	String imsi = mTelephony.getSubscriberId();
+    //     callbackContext.success(imsi);
+	// }
 
-	public String getIccid(JSONArray args, CallbackContext callbackContext)  {
-        Context context = cordova.getActivity().getApplicationContext();
-		final TelephonyManager mTelephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-		String iccid = mTelephony.getSimSerialNumber();
-        callbackContext.success(iccid);
-	}
+	// public String getIccid(JSONArray args, CallbackContext callbackContext)  {
+    //     Context context = cordova.getActivity().getApplicationContext();
+	// 	final TelephonyManager mTelephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+	// 	String iccid = mTelephony.getSimSerialNumber();
+    //     callbackContext.success(iccid);
+	// }
 
-	public String getMac(JSONArray args, CallbackContext callbackContext)  {
-        Context context = cordova.getActivity().getApplicationContext();
-		final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		final WifiInfo wInfo = wifiManager.getConnectionInfo();
-		String mac = wInfo.getMacAddress();
-        callbackContext.success(mac);
-	}
+	// public String getMac(JSONArray args, CallbackContext callbackContext)  {
+    //     Context context = cordova.getActivity().getApplicationContext();
+	// 	final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+	// 	final WifiInfo wInfo = wifiManager.getConnectionInfo();
+	// 	String mac = wInfo.getMacAddress();
+    //     callbackContext.success(mac);
+	// }
 }

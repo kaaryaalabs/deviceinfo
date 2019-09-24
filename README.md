@@ -6,7 +6,7 @@ You can use this plugin by
 
 installing the plugin using following command
 
-    ionic cordova plugin add https://github.com/kaaryalabs/deviceinfo.git
+    ionic cordova plugin add https://github.com/kaaryaalabs/deviceinfo.git
 
 then you have to declare a variable 'DeviceInfo' under import on any ts file you want to access it to.
 

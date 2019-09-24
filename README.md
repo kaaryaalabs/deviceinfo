@@ -1,6 +1,6 @@
 Hi,
 
-This plugin is developed by Kaaryaa Labs. 
+This plugin is developed by Kaaryaa Labs and helps you get IMEI, UUID and MAC of android device. But you must get android permissions before using it.
 
 You can use this plugin by 
 
@@ -19,6 +19,6 @@ then call method
 
      DeviceInfo.getImei('', (imei) => {
           console.log('imei is: ', imei);
-        }, error => console.log('error imei is: ', error));
+        }, error => console.log('error finding imei: ', error));
 
 Thanks

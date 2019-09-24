@@ -42,6 +42,7 @@ public class DeviceInfo extends CordovaPlugin {
     }
 
     private void getImei(JSONArray args, CallbackContext callbackContext) {
+        String deviceUniqueIdentifier = null;
         Context context = cordova.getActivity().getApplicationContext();
         final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		String imei = mTelephony.getDeviceId();

@@ -26,18 +26,14 @@ public class DeviceInfo extends CordovaPlugin {
             this.getImei(args, callbackContext);
             return true;
         }
-        if (action.equals("getImsi")) {
+        if (action.equals("getMac")) {
             this.getImsi(args, callbackContext);
             return true;
         }
-        if (action.equals("getIccid")) {
+        if (action.equals("getUuid")) {
             this.getIccid(args, callbackContext);
             return true;
         }
-        // if (action.equals("getMac")) {
-        //     this.getMac(args, callbackContext);
-        //     return true;
-        // }
         return false;
     }
 
@@ -49,25 +45,17 @@ public class DeviceInfo extends CordovaPlugin {
         callbackContext.success(imei);
     }
 
-    public void getImsi(JSONArray args, CallbackContext callbackContext)  {
+	public String getMac(JSONArray args, CallbackContext callbackContext)  {
         Context context = cordova.getActivity().getApplicationContext();
-		final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		String imsi = mTelephony.getSubscriberId();
-        callbackContext.success(imsi);
-	}
+		final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		final WifiInfo wInfo = wifiManager.getConnectionInfo();
+		String mac = wInfo.getMacAddress();
+        callbackContext.success(mac);
+    }
 
-	public void getIccid(JSONArray args, CallbackContext callbackContext)  {
+    public void getUuid(JSONArray args, CallbackContext callbackContext)  {
         Context context = cordova.getActivity().getApplicationContext();
-		final TelephonyManager mTelephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-		String iccid = mTelephony.getSimSerialNumber();
-        callbackContext.success(iccid);
+		String uuid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        callbackContext.success(uuid);
 	}
-
-	// public String getMac(JSONArray args, CallbackContext callbackContext)  {
-    //     Context context = cordova.getActivity().getApplicationContext();
-	// 	final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-	// 	final WifiInfo wInfo = wifiManager.getConnectionInfo();
-	// 	String mac = wInfo.getMacAddress();
-    //     callbackContext.success(mac);
-	// }
 }

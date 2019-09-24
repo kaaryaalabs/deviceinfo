@@ -8,9 +8,8 @@
   },
   "keywords": [
     "imei",
-    "imsi",
-    "iccid",
     "mac",
+    "uuid",
     "android",
     "not",
     "restart"

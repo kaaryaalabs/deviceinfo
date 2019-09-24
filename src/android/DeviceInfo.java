@@ -27,11 +27,11 @@ public class DeviceInfo extends CordovaPlugin {
             return true;
         }
         if (action.equals("getMac")) {
-            this.getImsi(args, callbackContext);
+            this.getMac(args, callbackContext);
             return true;
         }
         if (action.equals("getUuid")) {
-            this.getIccid(args, callbackContext);
+            this.getUuid(args, callbackContext);
             return true;
         }
         return false;

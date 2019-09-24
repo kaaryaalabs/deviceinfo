@@ -1,0 +1,23 @@
+{
+  "name": "deviceinfo",
+  "version": "1.0.0",
+  "description": "This package gives you information about you android device imei, imsi, iccid, mac.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "platform" : [
+    "android"
+  ],
+  "keywords": [
+    "imei",
+    "imsi",
+    "iccid",
+    "mac",
+    "android",
+    "not",
+    "restart"
+  ],
+  "author": "Kaarya Labs",
+  "license": "ISC"
+}

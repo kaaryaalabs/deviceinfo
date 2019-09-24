@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <name>DeviceInfo</name>
     <js-module name="DeviceInfo" src="www/DeviceInfo.js">
-        <clobbers target="cordova.plugins.DeviceInfo" />
+        <clobbers target="DeviceInfo" />
     </js-module>
     <platform name="android">
         <config-file parent="/*" target="res/xml/config.xml">

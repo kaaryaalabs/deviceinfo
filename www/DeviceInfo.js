@@ -1,18 +1,14 @@
 var exec = require('cordova/exec');
 
-var PLUGIN_NAME = "DeviceInfo"; // This is just for code completion uses.
-
-var DeviceInfo = function() {}; 
-DeviceInfo.getImei = function(onSuccess, onError) {
-   exec(onSuccess, onError, PLUGIN_NAME, "getImei", []);
+module.exports.getImei = function(onSuccess, onError) {
+   exec(onSuccess, onError, "DeviceInfo", "getImei", []);
 };
-DeviceInfo.getImsi = function(onSuccess, onError) {
-    exec(onSuccess, onError, PLUGIN_NAME, "getImsi", []);
+module.exports.getImsi = function(onSuccess, onError) {
+    exec(onSuccess, onError, "DeviceInfo", "getImsi", []);
  };
- DeviceInfo.getIccid = function(onSuccess, onError) {
-    exec(onSuccess, onError, PLUGIN_NAME, "getIccid", []);
+ module.exports.getIccid = function(onSuccess, onError) {
+    exec(onSuccess, onError, "DeviceInfo", "getIccid", []);
  };
- DeviceInfo.getMac = function(onSuccess, onError) {
-    exec(onSuccess, onError, PLUGIN_NAME, "getMac", []);
+ module.exports.getMac = function(onSuccess, onError) {
+    exec(onSuccess, onError, "DeviceInfo", "getMac", []);
  };
-module.exports = DeviceInfo;

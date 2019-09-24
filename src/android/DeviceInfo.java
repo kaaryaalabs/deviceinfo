@@ -49,14 +49,14 @@ public class DeviceInfo extends CordovaPlugin {
         callbackContext.success(imei);
     }
 
-    public String getImsi(JSONArray args, CallbackContext callbackContext)  {
+    public void getImsi(JSONArray args, CallbackContext callbackContext)  {
         Context context = cordova.getActivity().getApplicationContext();
 		final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		String imsi = mTelephony.getSubscriberId();
         callbackContext.success(imsi);
 	}
 
-	public String getIccid(JSONArray args, CallbackContext callbackContext)  {
+	public void getIccid(JSONArray args, CallbackContext callbackContext)  {
         Context context = cordova.getActivity().getApplicationContext();
 		final TelephonyManager mTelephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
 		String iccid = mTelephony.getSimSerialNumber();

@@ -98,16 +98,21 @@ public class DeviceInfo extends CordovaPlugin {
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
 
 
-        if (permissionsCallback == null) {
+        if (globalCallback == null) {
             return;
         }
-        if (requestCode == MY_PERMISSIONS_REQUEST_READ_PHONE_STATE) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getImei(globalArgs, globalCallback);
-            } else {
-                globalCallback.error("Could not take permissions");
-            }
+
+        if (permission != null) {
+            //Call checkPermission again to verify
+            boolean hasAllPermissions = cordova.hasPermission(permission);
+            addProperty(returnObj, KEY_RESULT_PERMISSION, hasAllPermissions);
+            getImei(globalArgs, globalCallback);
+        } else {
+            addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
+            addProperty(returnObj, KEY_MESSAGE, "Unknown error.");
+            globalCallback.error(returnObj);
         }
+        globalCallback = null;
     }
 
     private void addProperty(JSONObject obj, String key, Object value) {

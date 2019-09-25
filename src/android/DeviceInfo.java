@@ -82,12 +82,10 @@ public class DeviceInfo extends CordovaPlugin {
 
     private void checkPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            JSONObject returnObj = new JSONObject();
-            addProperty(returnObj, KEY_RESULT_PERMISSION, true);
+            addProperty( KEY_RESULT_PERMISSION, true);
             getImei(globalArgs, globalCallback);
         } else if (cordova.hasPermission(permission)) {
-            JSONObject returnObj = new JSONObject();
-            addProperty(returnObj, KEY_RESULT_PERMISSION, true);
+            addProperty( KEY_RESULT_PERMISSION, true);
             getImei(globalArgs, globalCallback);
         } else {
             cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, new String[]{permission});
@@ -105,17 +103,18 @@ public class DeviceInfo extends CordovaPlugin {
         if (permission != null) {
             //Call checkPermission again to verify
             boolean hasAllPermissions = cordova.hasPermission(permission);
-            addProperty(returnObj, KEY_RESULT_PERMISSION, hasAllPermissions);
+            addProperty( KEY_RESULT_PERMISSION, hasAllPermissions);
             getImei(globalArgs, globalCallback);
         } else {
-            addProperty(returnObj, KEY_ERROR, ACTION_REQUEST_PERMISSION);
-            addProperty(returnObj, KEY_MESSAGE, "Unknown error.");
+            addProperty( KEY_ERROR, ACTION_REQUEST_PERMISSION);
+            addProperty( KEY_MESSAGE, "Unknown error.");
             globalCallback.error(returnObj);
         }
         globalCallback = null;
     }
 
-    private void addProperty(JSONObject obj, String key, Object value) {
+    private void addProperty(String key, Object value) {
+        JSONObject obj = new JSONObject();
         try {
             if (value == null) {
                 obj.put(key, JSONObject.NULL);

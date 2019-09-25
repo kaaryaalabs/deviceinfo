@@ -24,8 +24,17 @@ import org.json.JSONObject;
  */
 public class DeviceInfo extends CordovaPlugin {
 
-    // private static final String READ_PHONE_STATE = "android.permission.READ_PHONE_STATE";
-    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 0;
+    private static final String ACTION_CHECK_PERMISSION = "checkPermission";
+    private static final String ACTION_REQUEST_PERMISSION = "requestPermission";
+    private static final String ACTION_REQUEST_PERMISSIONS = "requestPermissions";
+
+    private static final int REQUEST_CODE_ENABLE_PERMISSION = 55433;
+
+    private static final String KEY_ERROR = "error";
+    private static final String KEY_MESSAGE = "message";
+    private static final String KEY_RESULT_PERMISSION = "hasPermission";
+
+    private static final String permission = "android.permission.READ_PHONE_STATE";
 
     private CallbackContext globalCallback;
     private JSONArray globalArgs;
@@ -35,7 +44,7 @@ public class DeviceInfo extends CordovaPlugin {
         globalCallback = callbackContext;
         globalArgs = args;
         if (action.equals("getImei")) {
-            this.getImei(args, callbackContext);
+            checkPermission();
             return true;
         }
         if (action.equals("getMac")) {
@@ -72,22 +81,22 @@ public class DeviceInfo extends CordovaPlugin {
     }
 
     private void checkPermission() {
-        if (ActivityCompat.checkSelfPermission(this,
-                android.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
-                getImei(globalArgs, globalCallback);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_PHONE_STATE },
-                        MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-            }
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            JSONObject returnObj = new JSONObject();
+            addProperty(returnObj, KEY_RESULT_PERMISSION, true);
             getImei(globalArgs, globalCallback);
+        } else if (hasAllPermissions(permission)) {
+            JSONObject returnObj = new JSONObject();
+            addProperty(returnObj, KEY_RESULT_PERMISSION, true);
+            getImei(globalArgs, globalCallback);
+        } else {
+            cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, new String[]{permission});
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-            @NonNull int[] grantResults) {
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
+
 
         if (permissionsCallback == null) {
             return;
@@ -99,5 +108,18 @@ public class DeviceInfo extends CordovaPlugin {
                 Toast.makeText(this, "ehgehfg", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+    private boolean hasAllPermissions(JSONArray permissions) throws JSONException {
+        return hasAllPermissions(getPermissions(permissions));
+    }
+    private boolean hasAllPermissions(String[] permissions) throws JSONException {
+
+        for (String permission : permissions) {
+            if(!cordova.hasPermission(permission)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

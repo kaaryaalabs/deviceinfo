@@ -85,7 +85,7 @@ public class DeviceInfo extends CordovaPlugin {
             JSONObject returnObj = new JSONObject();
             addProperty(returnObj, KEY_RESULT_PERMISSION, true);
             getImei(globalArgs, globalCallback);
-        } else if (hasAllPermissions(permission)) {
+        } else if (cordova.hasPermission(permission)) {
             JSONObject returnObj = new JSONObject();
             addProperty(returnObj, KEY_RESULT_PERMISSION, true);
             getImei(globalArgs, globalCallback);
@@ -108,19 +108,6 @@ public class DeviceInfo extends CordovaPlugin {
                 globalCallback.error("Could not take permissions");
             }
         }
-    }
-    private boolean hasAllPermissions(JSONArray permissions) throws JSONException {
-        return hasAllPermissions(new String[]{permission});
-    }
-    private boolean hasAllPermissions(String[] permissions) throws JSONException {
-
-        for (String permission : permissions) {
-            if(!cordova.hasPermission(permission)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void addProperty(JSONObject obj, String key, Object value) {

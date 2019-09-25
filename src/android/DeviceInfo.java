@@ -12,6 +12,8 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.content.pm.PackageManager;
+import android.Manifest.permission;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
@@ -27,8 +29,9 @@ import org.json.JSONObject;
  */
 public class DeviceInfo extends CordovaPlugin {
 
-    public static final String PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
-    public static final int PHONE_STATE_REQ_CODE = 0;
+    // public static final String PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
+    public static final String  PHONE_STATE= "android.permission.READ_PHONE_STATE";
+    private static final int REQUEST_CODE_ENABLE_PERMISSION = 55433;
 
     private CallbackContext globalCallback;
     private JSONArray globalArgs;
@@ -38,19 +41,32 @@ public class DeviceInfo extends CordovaPlugin {
         globalCallback = callbackContext;
         globalArgs = args;
         if (action.equals("getImei")) {
+
+            // getImei(args, callbackContext); 
+
             if (cordova.hasPermission(PHONE_STATE)) {
                 getImei(args, callbackContext);
             } else {
-                getPermission(PHONE_STATE_REQ_CODE);
+                cordova.getThreadPool().execute(new Runnable() {
+                    public void run() {
+                        try {
+                            getPermission();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            callbackContext.error("Request permission has been denied.");
+                            globalCallback = null;
+                        }
+                    }
+                });
             }
             return true;
         }
         if (action.equals("getMac")) {
-            this.getMac(args, callbackContext);
+            getMac(args, callbackContext);
             return true;
         }
         if (action.equals("getUuid")) {
-            this.getUuid(args, callbackContext);
+            getUuid(args, callbackContext);
             return true;
         }
         return false;
@@ -61,7 +77,11 @@ public class DeviceInfo extends CordovaPlugin {
         Context context = cordova.getActivity().getApplicationContext();
         final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String imei = mTelephony.getDeviceId();
-        callbackContext.success(imei);
+        if (imei == null) {
+            callbackContext.error("error finding imei");
+        } else {
+            callbackContext.success(imei);
+        }
     }
 
     public void getMac(JSONArray args, CallbackContext callbackContext) {
@@ -78,86 +98,21 @@ public class DeviceInfo extends CordovaPlugin {
         callbackContext.success(uuid);
     }
 
-    protected void getPermission(int requestCode) {
-        cordova.requestPermission(this, requestCode, PHONE_STATE);
+    protected void getPermission(int requestCode)
+    {
+        cordova.requestPermission(this, requestCode, DRAW_OVER_OTHER_APPS);
     }
 
-    @Override
-    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
-            throws JSONException {
-        System.out.println("Entered on request call back");
-        for (int r : grantResults) {
-            System.out.println("granted result is: " + r );
-            if (r == PackageManager.PERMISSION_DENIED) {
-                this.callbackContext
-                        .sendPluginResult(new PluginResult(PluginResult.Status.ERROR, PERMISSION_DENIED_ERROR));
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
+    {
+        for(int r:grantResults)
+        {
+            if(r == PackageManager.PERMISSION_DENIED)
+            {
+                Log.i("Floatie", "Permission Denied");
                 return;
-            } else {
-
-            }  
+            }
         }
-        System.out.println("requestCode is " + requestCode);
-        // switch (requestCode) {
-        // case PHONE_STATE_REQ_CODE:
-        // search(executeArgs);
-        // break;
-        // case SAVE_REQ_CODE:
-        // save(executeArgs);
-        // break;
-        // case REMOVE_REQ_CODE:
-        // remove(executeArgs);
-        // break;
-        // }
+        Log.i("Floatie", "Permission Granted");
     }
-
-    // private void checkPermission() {
-    // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-    // addProperty(KEY_RESULT_PERMISSION, true);
-    // getImei(globalArgs, globalCallback);
-    // } else if (cordova.hasPermission(permission)) {
-    // addProperty(KEY_RESULT_PERMISSION, true);
-    // getImei(globalArgs, globalCallback);
-    // } else {
-    // cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, new String[]
-    // { permission });
-    // }
-    // }
-
-    // @Override
-    // public void onRequestPermissionResult(int requestCode, String[] permissions,
-    // int[] grantResults)
-    // throws JSONException {
-
-    // // Call info method
-    // logger.info("Entered on request call back");
-    // if (globalCallback == null) {
-    // return;
-    // }
-
-    // if (permission != null) {
-    // // Call checkPermission again to verify
-    // boolean hasAllPermissions = cordova.hasPermission(permission);
-    // addProperty(KEY_RESULT_PERMISSION, hasAllPermissions);
-    // getImei(globalArgs, globalCallback);
-    // } else {
-    // addProperty(KEY_ERROR, ACTION_REQUEST_PERMISSION);
-    // addProperty(KEY_MESSAGE, "Unknown error.");
-    // globalCallback.error("Permission Denied");
-    // }
-    // globalCallback = null;
-    // }
-
-    // private void addProperty(String key, Object value) {
-    // JSONObject obj = new JSONObject();
-    // try {
-    // if (value == null) {
-    // obj.put(key, JSONObject.NULL);
-    // } else {
-    // obj.put(key, value);
-    // }
-    // } catch (JSONException ignored) {
-    // // Believe exception only occurs when adding duplicate keys, so just ignore
-
-    // }
-    // }
 }

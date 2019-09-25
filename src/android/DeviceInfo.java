@@ -1,6 +1,9 @@
 package cordova.plugin.kaaryaa.deviceinfo;
 
 import android.os.Build;
+
+import java.util.logging.Logger;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 
@@ -38,6 +41,7 @@ public class DeviceInfo extends CordovaPlugin {
 
     private CallbackContext globalCallback;
     private JSONArray globalArgs;
+    private  Logger logger  = Logger.getLogger(GFG.class.getName());
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -94,8 +98,10 @@ public class DeviceInfo extends CordovaPlugin {
 
     @Override
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
+ 
 
-
+         // Call info method 
+        logger.info("Entered on request call back"); 
         if (globalCallback == null) {
             return;
         }

@@ -108,7 +108,7 @@ public class DeviceInfo extends CordovaPlugin {
         } else {
             addProperty( KEY_ERROR, ACTION_REQUEST_PERMISSION);
             addProperty( KEY_MESSAGE, "Unknown error.");
-            globalCallback.error(returnObj);
+            globalCallback.error("Permission Denied");
         }
         globalCallback = null;
     }

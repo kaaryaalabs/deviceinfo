@@ -105,12 +105,12 @@ public class DeviceInfo extends CordovaPlugin {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getImei(globalArgs, globalCallback);
             } else {
-                Toast.makeText(this, "ehgehfg", Toast.LENGTH_SHORT).show();
+                globalCallback.error('Could not take permissions');
             }
         }
     }
     private boolean hasAllPermissions(JSONArray permissions) throws JSONException {
-        return hasAllPermissions(getPermissions(permissions));
+        return hasAllPermissions(new String[]{permission});
     }
     private boolean hasAllPermissions(String[] permissions) throws JSONException {
 
@@ -121,5 +121,17 @@ public class DeviceInfo extends CordovaPlugin {
         }
 
         return true;
+    }
+
+    private void addProperty(JSONObject obj, String key, Object value) {
+        try {
+            if (value == null) {
+                obj.put(key, JSONObject.NULL);
+            } else {
+                obj.put(key, value);
+            }
+        } catch (JSONException ignored) {
+            //Believe exception only occurs when adding duplicate keys, so just ignore it
+        }
     }
 }

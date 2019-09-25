@@ -27,28 +27,22 @@ import org.json.JSONObject;
  */
 public class DeviceInfo extends CordovaPlugin {
 
-    private static final String ACTION_CHECK_PERMISSION = "checkPermission";
-    private static final String ACTION_REQUEST_PERMISSION = "requestPermission";
-    private static final String ACTION_REQUEST_PERMISSIONS = "requestPermissions";
-
-    private static final int REQUEST_CODE_ENABLE_PERMISSION = 55433;
-
-    private static final String KEY_ERROR = "error";
-    private static final String KEY_MESSAGE = "message";
-    private static final String KEY_RESULT_PERMISSION = "hasPermission";
-
-    private static final String permission = "android.permission.READ_PHONE_STATE";
+    public static final String PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
+    public static final int PHONE_STATE_REQ_CODE = 0;
 
     private CallbackContext globalCallback;
     private JSONArray globalArgs;
-    private  Logger logger  = Logger.getLogger(GFG.class.getName());
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         globalCallback = callbackContext;
         globalArgs = args;
         if (action.equals("getImei")) {
-            checkPermission();
+            if (cordova.hasPermission(PHONE_STATE)) {
+                getImei(args, callbackContext);
+            } else {
+                getPermission(PHONE_STATE_REQ_CODE);
+            }
             return true;
         }
         if (action.equals("getMac")) {
@@ -84,51 +78,86 @@ public class DeviceInfo extends CordovaPlugin {
         callbackContext.success(uuid);
     }
 
-    private void checkPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            addProperty( KEY_RESULT_PERMISSION, true);
-            getImei(globalArgs, globalCallback);
-        } else if (cordova.hasPermission(permission)) {
-            addProperty( KEY_RESULT_PERMISSION, true);
-            getImei(globalArgs, globalCallback);
-        } else {
-            cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, new String[]{permission});
-        }
+    protected void getPermission(int requestCode) {
+        cordova.requestPermission(this, requestCode, PHONE_STATE);
     }
 
     @Override
-    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException {
- 
-
-         // Call info method 
-        logger.info("Entered on request call back"); 
-        if (globalCallback == null) {
-            return;
-        }
-
-        if (permission != null) {
-            //Call checkPermission again to verify
-            boolean hasAllPermissions = cordova.hasPermission(permission);
-            addProperty( KEY_RESULT_PERMISSION, hasAllPermissions);
-            getImei(globalArgs, globalCallback);
-        } else {
-            addProperty( KEY_ERROR, ACTION_REQUEST_PERMISSION);
-            addProperty( KEY_MESSAGE, "Unknown error.");
-            globalCallback.error("Permission Denied");
-        }
-        globalCallback = null;
-    }
-
-    private void addProperty(String key, Object value) {
-        JSONObject obj = new JSONObject();
-        try {
-            if (value == null) {
-                obj.put(key, JSONObject.NULL);
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
+            throws JSONException {
+        System.out.println("Entered on request call back");
+        for (int r : grantResults) {
+            System.out.println("granted result is: " + r );
+            if (r == PackageManager.PERMISSION_DENIED) {
+                this.callbackContext
+                        .sendPluginResult(new PluginResult(PluginResult.Status.ERROR, PERMISSION_DENIED_ERROR));
+                return;
             } else {
-                obj.put(key, value);
-            }
-        } catch (JSONException ignored) {
-            //Believe exception only occurs when adding duplicate keys, so just ignore it
+
+            }  
         }
+        System.out.println("requestCode is " + requestCode);
+        // switch (requestCode) {
+        // case PHONE_STATE_REQ_CODE:
+        // search(executeArgs);
+        // break;
+        // case SAVE_REQ_CODE:
+        // save(executeArgs);
+        // break;
+        // case REMOVE_REQ_CODE:
+        // remove(executeArgs);
+        // break;
+        // }
     }
+
+    // private void checkPermission() {
+    // if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+    // addProperty(KEY_RESULT_PERMISSION, true);
+    // getImei(globalArgs, globalCallback);
+    // } else if (cordova.hasPermission(permission)) {
+    // addProperty(KEY_RESULT_PERMISSION, true);
+    // getImei(globalArgs, globalCallback);
+    // } else {
+    // cordova.requestPermissions(this, REQUEST_CODE_ENABLE_PERMISSION, new String[]
+    // { permission });
+    // }
+    // }
+
+    // @Override
+    // public void onRequestPermissionResult(int requestCode, String[] permissions,
+    // int[] grantResults)
+    // throws JSONException {
+
+    // // Call info method
+    // logger.info("Entered on request call back");
+    // if (globalCallback == null) {
+    // return;
+    // }
+
+    // if (permission != null) {
+    // // Call checkPermission again to verify
+    // boolean hasAllPermissions = cordova.hasPermission(permission);
+    // addProperty(KEY_RESULT_PERMISSION, hasAllPermissions);
+    // getImei(globalArgs, globalCallback);
+    // } else {
+    // addProperty(KEY_ERROR, ACTION_REQUEST_PERMISSION);
+    // addProperty(KEY_MESSAGE, "Unknown error.");
+    // globalCallback.error("Permission Denied");
+    // }
+    // globalCallback = null;
+    // }
+
+    // private void addProperty(String key, Object value) {
+    // JSONObject obj = new JSONObject();
+    // try {
+    // if (value == null) {
+    // obj.put(key, JSONObject.NULL);
+    // } else {
+    // obj.put(key, value);
+    // }
+    // } catch (JSONException ignored) {
+    // // Believe exception only occurs when adding duplicate keys, so just ignore
+
+    // }
+    // }
 }

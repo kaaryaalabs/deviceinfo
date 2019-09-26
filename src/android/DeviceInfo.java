@@ -123,10 +123,8 @@ public class DeviceInfo extends CordovaPlugin {
         {
             if(r == PackageManager.PERMISSION_DENIED)
             {
-                Log.i("Floatie", "Permission Denied");
                 return;
             }
         }
-        Log.i("Floatie", "Permission Granted");
     }
 }

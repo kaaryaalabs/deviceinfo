@@ -50,7 +50,7 @@ public class DeviceInfo extends CordovaPlugin {
                 cordova.getThreadPool().execute(new Runnable() {
                     public void run() {
                         try {
-                            getPermission();
+                            getPermission(REQUEST_CODE_ENABLE_PERMISSION);
                         } catch (Exception e) {
                             e.printStackTrace();
                             callbackContext.error("Request permission has been denied.");
@@ -100,7 +100,7 @@ public class DeviceInfo extends CordovaPlugin {
 
     protected void getPermission(int requestCode)
     {
-        cordova.requestPermission(this, requestCode, DRAW_OVER_OTHER_APPS);
+        cordova.requestPermission(cordova, requestCode, DRAW_OVER_OTHER_APPS);
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException

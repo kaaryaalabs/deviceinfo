@@ -95,13 +95,21 @@ public class DeviceInfo extends CordovaPlugin {
         final WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         final WifiInfo wInfo = wifiManager.getConnectionInfo();
         String mac = wInfo.getMacAddress();
-        callbackContext.success(mac);
+        if (mac == null) {
+            callbackContext.error("error finding mac");
+        } else {
+            callbackContext.success(mac);
+        }
     }
 
     public void getUuid(JSONArray args, CallbackContext callbackContext) {
         Context context = cordova.getActivity().getApplicationContext();
         String uuid = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        callbackContext.success(uuid);
+        if (uuid == null) {
+            callbackContext.error("error finding uuid");
+        } else {
+            callbackContext.success(uuid);
+        }
     }
 
     protected void getPermission(int requestCode)

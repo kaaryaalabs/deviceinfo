@@ -48,23 +48,7 @@ public class DeviceInfo extends CordovaPlugin {
         if (action.equals("getImei")) {
 
             getImei(args, callbackContext);
-            // getImei(args, callbackContext); 
-
-            // if (cordova.hasPermission(PHONE_STATE)) {
-            //     getImei(args, callbackContext);
-            // } else {
-            //     cordova.getThreadPool().execute(new Runnable() {
-            //         public void run() {
-            //             try {
-            //                 getPermission(REQUEST_CODE_ENABLE_PERMISSION);
-            //             } catch (Exception e) {
-            //                 e.printStackTrace();
-            //                 callbackContext.error("Request permission has been denied.");
-            //                 globalCallback = null;
-            //             }
-            //         }
-            //     });
-            // }
+          
             return true;
         }
         if (action.equals("getMac")) {
@@ -112,19 +96,37 @@ public class DeviceInfo extends CordovaPlugin {
         }
     }
 
-    protected void getPermission(int requestCode)
-    {
-        cordova.requestPermission(this, requestCode, PHONE_STATE);
-    }
+    // protected void getPermission(int requestCode)
+    // {
+    //     cordova.requestPermission(this, requestCode, PHONE_STATE);
+    // }
 
-    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
-    {
-        for(int r:grantResults)
-        {
-            if(r == PackageManager.PERMISSION_DENIED)
-            {
-                return;
-            }
-        }
-    }
+    // public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
+    // {
+    //     for(int r:grantResults)
+    //     {
+    //         if(r == PackageManager.PERMISSION_DENIED)
+    //         {
+    //             return;
+    //         }
+    //     }
+    // }
+
+      // getImei(args, callbackContext); 
+
+            // if (cordova.hasPermission(PHONE_STATE)) {
+            //     getImei(args, callbackContext);
+            // } else {
+            //     cordova.getThreadPool().execute(new Runnable() {
+            //         public void run() {
+            //             try {
+            //                 getPermission(REQUEST_CODE_ENABLE_PERMISSION);
+            //             } catch (Exception e) {
+            //                 e.printStackTrace();
+            //                 callbackContext.error("Request permission has been denied.");
+            //                 globalCallback = null;
+            //             }
+            //         }
+            //     });
+            // }
 }

@@ -19,6 +19,7 @@ import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaWebView;
 import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.LOG;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,34 +32,39 @@ public class DeviceInfo extends CordovaPlugin {
 
     // public static final String PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
     public static final String  PHONE_STATE= "android.permission.READ_PHONE_STATE";
-    private static final int REQUEST_CODE_ENABLE_PERMISSION = 55433;
+    private static final int REQUEST_CODE_ENABLE_PERMISSION = 0;
 
     private CallbackContext globalCallback;
     private JSONArray globalArgs;
 
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
+    }
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         globalCallback = callbackContext;
         globalArgs = args;
         if (action.equals("getImei")) {
 
+            getImei(args, callbackContext);
             // getImei(args, callbackContext); 
 
-            if (cordova.hasPermission(PHONE_STATE)) {
-                getImei(args, callbackContext);
-            } else {
-                cordova.getThreadPool().execute(new Runnable() {
-                    public void run() {
-                        try {
-                            getPermission(REQUEST_CODE_ENABLE_PERMISSION);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            callbackContext.error("Request permission has been denied.");
-                            globalCallback = null;
-                        }
-                    }
-                });
-            }
+            // if (cordova.hasPermission(PHONE_STATE)) {
+            //     getImei(args, callbackContext);
+            // } else {
+            //     cordova.getThreadPool().execute(new Runnable() {
+            //         public void run() {
+            //             try {
+            //                 getPermission(REQUEST_CODE_ENABLE_PERMISSION);
+            //             } catch (Exception e) {
+            //                 e.printStackTrace();
+            //                 callbackContext.error("Request permission has been denied.");
+            //                 globalCallback = null;
+            //             }
+            //         }
+            //     });
+            // }
             return true;
         }
         if (action.equals("getMac")) {
@@ -100,7 +106,7 @@ public class DeviceInfo extends CordovaPlugin {
 
     protected void getPermission(int requestCode)
     {
-        cordova.requestPermission(cordova, requestCode, DRAW_OVER_OTHER_APPS);
+        cordova.requestPermission(this, requestCode, PHONE_STATE);
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException

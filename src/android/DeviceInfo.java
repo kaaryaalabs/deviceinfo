@@ -68,7 +68,12 @@ public class DeviceInfo extends CordovaPlugin {
         final TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         String imei = mTelephony.getDeviceId();
         if (imei == null) {
-            callbackContext.error("error finding imei");
+            imei = Secure.getString(getApplicationContext().getContentResolver(), Secure.ANDROID_ID); 
+            if (imei == null) {
+                callbackContext.error("error finding imei");
+            } else {
+                callbackContext.success(imei);
+            }
         } else {
             callbackContext.success(imei);
         }
